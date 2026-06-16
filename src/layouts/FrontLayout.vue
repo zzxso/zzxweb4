@@ -1,5 +1,10 @@
 <template>
   <div class="front-layout">
+    <div class="top-notice" v-if="showNotice">
+      <span>本网站部署在海外平台，国内访问可能较慢，请耐心等待。</span>
+      <button @click="showNotice = false">×</button>
+    </div>
+
     <ParticleBackground />
     <nav class="main-nav glass-card" :class="{ 'nav-scrolled': scrolled, 'nav-open': mobileMenuOpen }">
       <div class="nav-container container">
@@ -23,6 +28,10 @@
         </div>
 
         <div class="nav-actions">
+          <button class="music-btn" @click="toggleMusic" :title="audioStore.isPlaying ? '暂停音乐' : '播放音乐'">
+            <el-icon :size="18"><VideoPlay v-if="!audioStore.isPlaying" /></el-icon>
+            <el-icon :size="18"><VideoPause v-else /></el-icon>
+          </button>
           <router-link to="/admin" class="nav-admin-link">
             <el-icon><Setting /></el-icon>
           </router-link>
@@ -73,10 +82,14 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ParticleBackground from '@/components/ParticleBackground.vue'
+import { useAudioStore } from '@/stores/audio'
+import { VideoPlay, VideoPause } from '@element-plus/icons-vue'
 
 const route = useRoute()
+const audioStore = useAudioStore()
 const scrolled = ref(false)
 const mobileMenuOpen = ref(false)
+const showNotice = ref(true)
 const currentYear = new Date().getFullYear()
 
 const navItems = [
@@ -92,6 +105,10 @@ const toggleMobileMenu = () => {
 
 const closeMobileMenu = () => {
   mobileMenuOpen.value = false
+}
+
+const toggleMusic = () => {
+  audioStore.toggle()
 }
 
 const handleScroll = () => {
@@ -115,6 +132,57 @@ onUnmounted(() => {
 .front-layout {
   min-height: 100vh;
   position: relative;
+}
+
+.top-notice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(30, 41, 59, 0.95);
+  color: #94a3b8;
+  font-size: 0.8rem;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  button {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+
+    &:hover {
+      color: #94a3b8;
+    }
+  }
+}
+
+.music-btn {
+  background: none;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #818cf8;
+  transition: all 0.3s;
+
+  &:hover {
+    background: rgba(79, 70, 229, 0.1);
+    border-color: rgba(79, 70, 229, 0.6);
+  }
 }
 
 .main-nav {
@@ -206,7 +274,7 @@ onUnmounted(() => {
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
   }
 
   .nav-admin-link {
@@ -276,9 +344,9 @@ onUnmounted(() => {
 
   .mobile-menu-content {
     position: absolute;
-    right: 0;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%) translateX(30px);
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -306,6 +374,7 @@ onUnmounted(() => {
   z-index: 1;
   min-height: 100vh;
   padding-top: 80px;
+  margin-top: 30px;
 }
 
 .site-footer {
@@ -372,6 +441,7 @@ onUnmounted(() => {
 
   .main-content {
     padding-top: 64px;
+    margin-top: 28px;
   }
 
   .site-footer {
@@ -398,10 +468,13 @@ onUnmounted(() => {
 
   .main-content {
     padding-top: 56px;
+    margin-top: 26px;
   }
 
   .mobile-menu-overlay .mobile-menu-content {
     padding: 32px 24px;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     .mobile-nav-link {
       font-size: 1.2rem;

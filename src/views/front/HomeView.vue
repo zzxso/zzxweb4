@@ -472,14 +472,17 @@ onMounted(async () => {
     min-height: auto;
     padding: 60px 0 40px;
 
-    .hero-bg {
-      display: none;
-    }
-
     .hero-container {
       flex-direction: column;
       text-align: center;
-      gap: 32px;
+      gap: 24px;
+    }
+
+    .hero-bg {
+      display: block;
+      width: 280px;
+      height: 350px;
+      opacity: 0.6;
     }
 
     .hero-content {
@@ -556,6 +559,11 @@ onMounted(async () => {
 // Small mobile
 @media (max-width: 480px) {
   .hero-section {
+    .hero-bg {
+      width: 220px;
+      height: 280px;
+    }
+
     .hero-content {
       .hero-name {
         font-size: 1.6rem;
