@@ -63,8 +63,26 @@ export async function updateProject(id, updates) {
   return data
 }
 
-// 删除项目
+// 删除项目（同时删除 Storage 中的封面图）
 export async function deleteProject(id) {
+  const { data: project } = await supabase
+    .from('projects')
+    .select('cover')
+    .eq('id', id)
+    .single()
+
+  if (project?.cover) {
+    try {
+      const bucket = import.meta.env.VITE_BUCKET_NAME || 'public-assets'
+      const filePath = project.cover.match(/\/([^/]+)$/)?.[1]
+      if (filePath) {
+        await supabase.storage.from(bucket).remove(['project/covers/' + filePath])
+      }
+    } catch (e) {
+      console.warn('删除封面失败:', e)
+    }
+  }
+
   const { error } = await supabase
     .from('projects')
     .delete()
@@ -116,8 +134,36 @@ export async function updateResource(id, updates) {
   return data
 }
 
-// 删除资源
+// 删除资源（同时删除 Storage 中的文件和封面图）
 export async function deleteResource(id) {
+  const { data: resource } = await supabase
+    .from('resources')
+    .select('cover, file_url')
+    .eq('id', id)
+    .single()
+
+  if (resource) {
+    try {
+      const bucket = import.meta.env.VITE_BUCKET_NAME || 'public-assets'
+      const files = []
+
+      if (resource.cover) {
+        const name = resource.cover.match(/\/([^/]+)$/)?.[1]
+        if (name) files.push('resource/covers/' + name)
+      }
+      if (resource.file_url) {
+        const name = resource.file_url.match(/\/([^/]+)$/)?.[1]
+        if (name) files.push('resource/files/' + name)
+      }
+
+      if (files.length) {
+        await supabase.storage.from(bucket).remove(files)
+      }
+    } catch (e) {
+      console.warn('删除 Storage 文件失败:', e)
+    }
+  }
+
   const { error } = await supabase
     .from('resources')
     .delete()
