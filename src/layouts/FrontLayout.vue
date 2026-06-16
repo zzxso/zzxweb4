@@ -29,8 +29,8 @@
 
         <div class="nav-actions">
           <button class="music-btn" @click="toggleMusic" :title="audioStore.isPlaying ? '暂停音乐' : '播放音乐'">
-            <el-icon :size="18"><VideoPlay v-if="!audioStore.isPlaying" /></el-icon>
-            <el-icon :size="18"><VideoPause v-else /></el-icon>
+            <el-icon :size="18" v-if="!audioStore.isPlaying"><VideoPlay /></el-icon>
+            <el-icon :size="18" v-else><VideoPause /></el-icon>
           </button>
           <router-link to="/admin" class="nav-admin-link">
             <el-icon><Setting /></el-icon>
