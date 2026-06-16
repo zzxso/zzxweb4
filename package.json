@@ -1,0 +1,29 @@
+{
+  "name": "personal-website-supabase",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0",
+    "pinia": "^2.1.7",
+    "element-plus": "^2.5.0",
+    "@element-plus/icons-vue": "^2.3.1",
+    "three": "^0.162.0",
+    "@supabase/supabase-js": "^2.40.0",
+    "viewerjs": "^1.11.5",
+    "pdfjs-dist": "^4.3.0",
+    "dayjs": "^1.11.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.0",
+    "sass": "^1.71.0",
+    "@types/three": "^0.162.0"
+  }
+}
